@@ -1,0 +1,129 @@
+{% extends "formwork.html" %}
+{% block head %}
+天天生鲜-收货地址
+{% endblock %}
+{% block body %}
+{% load static %}
+	<div class="search_bar clearfix">
+		<a href="{% url 'fresh' %}" class="logo fl"><img src="{{ MEDIA_URL }}{{ logo.banner }}"></a>
+		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;用户中心</div>
+		<div class="search_con fr">
+			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
+			<input type="button" class="input_btn fr" name="" value="搜索">
+		</div>		
+	</div>
+
+	<div class="main_con clearfix">
+		<div class="left_menu_con clearfix">
+			<h3>用户中心</h3>
+			<ul>
+				<li><a href="{% url 'info' %}">· 个人信息</a></li>
+				<li><a href="{% url 'order' %}">· 全部订单</a></li>
+				<li><a href="{% url 'site' %}" class="active">· 收货地址</a></li>
+			</ul>
+		</div>
+		<div class="right_content clearfix">
+				<h3 class="common_title2">收货地址</h3>
+				<div class="site_con">
+					<dl>
+						<dt>当前地址：</dt>
+					</dl>
+
+							<select name="select" id="select">
+							{% for i in default %}
+								{% if i.approve == 2 %}
+								<option value="{{ i.id }}" selected="selected">{{ i.provin }}  {{ i.name }}  {{ i.tel }}</option>}
+								{% else %}
+								<option value="{{ i.id }}">{{ i.provin }}  {{ i.name }}  {{ i.tel }}</option>
+								{% endif %}
+							{% endfor %}
+							</select>
+
+							<input type="submit" name="" value="确认地址" class="selectone">
+
+					<!--<a href="{% url 'dizhi' %}">修改地址</a>-->
+				</div>
+				<h3 class="common_title2">编辑地址</h3>
+				<div class="site_con">
+
+						{% csrf_token %}
+						<div class="form_group">
+							<label>收件人：</label>
+							<input type="text" name="" id="name">
+						</div>
+						<div class="form_group form_group2">
+							<label>详细地址：</label>
+							<textarea class="site_area" name="" id="address"></textarea>
+						</div>
+						<div class="form_group">
+							<label>邮编：</label>
+							<input type="text" name="" id="code">
+						</div>
+						<div class="form_group">
+							<label>手机：</label>
+							<input type="text" name="" id="tel">
+						</div>
+
+						<input type="submit" name="" value="提交" class="info_submit">
+						<div class="one"></div>
+
+				</div>
+		</div>
+	</div>
+
+<script src="{% static 'jquery-3.3.1.js' %}"></script>
+<script src="{% static 'jquery.cookie.js' %}"></script>
+<script>
+	$('.info_submit').click(function(){
+		$.ajax({
+			url : 'http://127.0.0.1:8000/site/',
+			type:'post',
+			data:{
+				name:$('#name').val(),
+				address:$('#address').val(),
+				code:$('#code').val(),
+				tel:$('#tel').val()
+			},
+
+			headers:{
+				"X-CSRFTOKEN":$.cookie('csrftoken')
+			},
+			dateType:'json',
+			success: function(res){
+				if (res.name == '添加成功' ){
+					window.location.href='http://127.0.0.1:8000/site/'
+					alert('添加成功')
+				}else{
+					$('.one').html(res.name)
+				}
+			}
+		})
+		return false
+	})
+
+
+$('.selectone').click(function(){
+		$.ajax({
+			url : 'http://127.0.0.1:8000/dizhi/',
+			type:'post',
+			data:{
+				select:$('#select').val()
+			},
+
+			headers:{
+				"X-CSRFTOKEN":$.cookie('csrftoken')
+			},
+			dateType:'json',
+			success: function(res){
+				alert('地址添加成功')
+			}
+		})
+		return false
+	})
+
+
+
+
+
+</script>
+{% endblock %}

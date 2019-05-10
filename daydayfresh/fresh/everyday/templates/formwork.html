@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% load static %}
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>{% block head %}天天生鲜-首页{% endblock %}</title>
+	<link rel="stylesheet" href="{% static 'css/reset.css'%}">
+	<link rel="stylesheet" href="{% static 'css/main.css'%}">
+	<script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery-ui.min.js'%}"></script>
+	<script type="text/javascript" src="{% static 'js/slide.js' %}"></script>
+</head>
+<body>
+	<div class="header_con">
+		<div class="header">
+			<div class="welcome fl">欢迎来到天天生鲜！</div>
+			<div class="fr">
+				{% if user.is_authenticated %}
+					<div class="login_info fl">
+						欢迎您：<em>{{ user.username }}</em>
+						<a href="{% url 'freshs' %}">退出</a>
+					</div>
+				{% else %}
+					<div class="login_btn fl">
+						<a href="{% url 'login' %}">登录</a>
+						<span>|</span>
+						<a href="{% url 'register' %}">注册</a>
+					</div>
+				{% endif %}
+				<div class="user_link fl">
+					<span>|</span>
+					<!--<a href="{% url 'fresh' %}">首页</a>-->
+					<a href="{% url 'info' %}">用户中心</a>
+					<span>|</span>
+					<a href="{% url 'cart' %}">我的购物车</a>
+					<span>|</span>
+					<a href="{% url 'place_order' %}">我的订单</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+    {% block body %}
+
+    {% endblock %}
+
+
+	<div class="footer">
+		<div class="foot_link">
+			<a href="#">关于我们</a>
+			<span>|</span>
+			<a href="#">联系我们</a>
+			<span>|</span>
+			<a href="#">招聘人才</a>
+			<span>|</span>
+			<a href="#">友情链接</a>
+		</div>
+		<p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
+		<p>电话：010-****888    京ICP备*******8号</p>
+	</div>
+	<!--<script type="text/javascript" src="js/slideshow.js"></script>-->
+	<!--<script type="text/javascript">-->
+		<!--&lt;!&ndash;BCSlideshow('focuspic');&ndash;&gt;-->
+		<!--var oFruit = document.getElementById('fruit_more');-->
+		<!--var oShownum = document.getElementById('show_count');-->
+
+		<!--var hasorder = localStorage.getItem('order_finish');-->
+
+		<!--if(hasorder)-->
+		<!--{-->
+			<!--oShownum.innerHTML = '2';-->
+		<!--}-->
+
+		<!--&lt;!&ndash;oFruit.onclick = function(){&ndash;&gt;-->
+			<!--&lt;!&ndash;window.location.href = 'list.html';&ndash;&gt;-->
+		<!--&lt;!&ndash;}&ndash;&gt;-->
+	<!--</script>-->
+</body>
+</html>

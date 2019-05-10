@@ -1,0 +1,6 @@
+Django==2.1.7
+jieba==0.39
+mysqlclient==1.4.2.post1
+Pillow==5.4.1
+pytz==2018.9
+Whoosh==2.7.4

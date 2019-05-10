@@ -1,0 +1,123 @@
+{% extends "formwork.html" %}
+{% block head %}
+天天生鲜-商品列表
+{% endblock %}
+{% block body %}
+{% load static %}
+	<div class="search_bar clearfix">
+		<a href="{% url 'fresh' %}" class="logo fl"><img src="{{ MEDIA_URL }}{{ logo.banner }}"></a>
+		<div class="search_con fl">
+
+
+			{% if p == 1 %}
+			<form action="{% url 'list' 0 %}">
+			<input type="text" class="input_text fl" name="search" placeholder="搜索商品">
+			<input type="submit" class="input_btn fr" name="" value="搜索">
+			</form>
+			{% else %}
+			<form action="{% url 'list' 0 %}">
+			<input type="text" class="input_text fl" name="search" placeholder="没有搜索到商品">
+			<input type="submit" class="input_btn fr" name="" value="搜索">
+			</form>
+			{% endif %}
+
+
+		</div>
+		<div class="guest_cart fr">
+			<a href="{% url 'cart' %}" class="cart_name fl">我的购物车</a>
+			<div class="goods_count fl">{{ num }}</div>
+		</div>
+	</div>
+
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>	
+				<span></span>			
+				<ul class="subnav">
+					{% load category %}
+					{% get_categories as categories %}
+					{% for category in categories %}
+					<li><a href="{% url 'list' category.id %}" class="{{ category.icon }}">{{ category.name }}</a></li>
+					{% endfor %}
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="{% url 'fresh' %}">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">{{ name.name }}</a>
+	</div>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+					{% for i in forset %}
+					<li>
+						<a href="{% url 'detail' i.id %}"><img src="{{ MEDIA_URL }}{{ i.banner }}"></a>
+						<h4><a href="{% url 'detail' i.id %}">{{ i.name }}</a></h4>
+						<div class="prize">￥{{ i.price2 }}</div>
+					</li>
+					{% endfor %}
+
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+				<a href="#" class="active">默认</a>
+				<a href="#">价格</a>
+				<a href="#">人气</a>
+			</div>
+
+			<ul class="goods_type_list clearfix">
+				{% for i in good.object_list %}
+				<li>
+					<a href="{% url 'detail' i.id %}"><img src="{{ MEDIA_URL }}{{  i.banner }}"></a>
+					<h4><a href="{% url 'detail' i.id %}">{{ i.name }}</a></h4>
+					<input type="hidden" value="{{ i.id }}">
+					<div class="operate">
+						<span class="prize">{{ i.price2 }}</span>
+						<span class="unit">{{ i.price2 }}/500g</span>
+						<a href="{% url 'shoppings' i.id %}" class="add_goods" title="加入购物车"></a>
+						<!--<input type="submit" value="" class="add_goods">-->
+					</div>
+				</li>
+				{% endfor %}
+			</ul>>
+
+			<div class="pagenation">
+				{% for list_id in good|slice:'1' %}
+				{% if good.has_previous %}
+				<a href="{% url 'list_fenye' list_id.Meta_id_id  good.previous_page_number %}">上一页</a>
+				{% endif %}
+				{% for i in good.paginator.page_range %}
+
+				<a href="{% url 'list_fenye' list_id.Meta_id_id  i %}" class="active">{{ i }}</a>
+
+				{% endfor %}
+				{% if good.has_next %}
+				<a href="{% url 'list_fenye' list_id.Meta_id_id good.next_page_number %}">下一页</a>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+{% endblock %}

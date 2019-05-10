@@ -1,0 +1,209 @@
+{% extends "formwork.html" %}
+{% block head %}
+天天生鲜-商品详情
+{% endblock %}
+{% block body %}
+{% load static %}
+
+	<div class="search_bar clearfix">
+		<a href="{% url 'fresh' %}" class="logo fl"><img src="{{ MEDIA_URL }}{{ logo.banner }}"></a>
+		<div class="search_con fl">
+			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
+			<input type="button" class="input_btn fr" name="" value="搜索">
+		</div>
+		<div class="guest_cart fr">
+			<a href="{% url 'cart' %}" class="cart_name fl">我的购物车</a>
+			<div class="goods_count fl" id="show_count">{{ number }}</div>
+		</div>
+	</div>
+
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>	
+				<span></span>			
+				<ul class="subnav">
+					<!--{% load category %}-->
+					{% get_categories as categories %}
+					{% for category in categories %}
+					<li><a href="{% url 'list' category.id %}" class="{{ category.icon }}">{{ category.name }}</a></li>
+					{% endfor %}
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="{% url 'fresh' %}">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="{% url 'list' good.Meta_id.id %}">{{ good.Meta_id.name}}</a>
+		<span>></span>
+		<a href="#">{{ good.name }}</a>
+	</div>
+
+	<div class="goods_detail_con clearfix">
+		<div class="goods_detail_pic fl"><img src="{{ MEDIA_URL }}{{  good.banner }}" style="height:100%;width:100%;"></div>
+
+		<div class="goods_detail_list fr">
+			<!--<input type="hidden" value="{{ good.id }}" class="pid" id="pid">-->
+			<!--<div class="pid" id="pid">{{ good.id }}</div>-->
+			<h3>{{ good.name }}</h3>
+			<p>{{ good.icon }}</p>
+			<div class="prize_bar">
+				<span class="show_pirze">¥<em id="good_price">{{ good.price2 }}</em>元</span>
+				<span class="show_unit">单  位：500g</span>
+			</div>
+			<div class="goods_num clearfix">
+				<div class="num_name fl">数 量：</div>
+				<div class="num_add fl">
+					<input type="text" class="num_show fl" value="1">
+					<a href="javascript:;" class="add fr">+</a>
+					<a href="javascript:;" class="minus fr">-</a>	
+				</div> 
+			</div>
+			<div class="total">总价：<em id="price">{{ good.price2 }}元</em></div>
+			<div class="operate_btn">
+
+				<a href="javascript:;" class="buy_btn">立即购买</a>
+				<a href="javascript:;" class="add_cart" id="add_cart">
+					加入购物车
+				</a>
+				<input type="hidden" value="{{ good.id }}" class="pid" id="pid">
+			</div>
+		</div>
+	</div>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+					{% for k in forset %}
+					<li>
+						<a href="{% url 'detail' k.id %}"><img src="{{ MEDIA_URL }}{{ k.banner }}"></a>
+						<h4><a href="{% url 'detail' k.id %}">{{ k.name }}</a></h4>
+						<div class="prize">￥{{ k.price2 }}</div>
+					</li>
+					{% endfor %}
+
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<ul class="detail_tab clearfix">
+				<li class="active">商品介绍</li>
+				<li>评论</li>
+			</ul>
+
+			<div class="tab_content">
+				<dl>
+					<dt>商品详情：</dt>
+					<dd>{{ good.desc }} </dd>
+				</dl>
+			</div>
+
+		</div>
+	</div>
+
+	<!--<script type="text/javascript" src="js/jquery-1.12.2.js"></script>-->
+	<script src="{% static 'jquery-3.3.1.js' %}"></script>
+	<script src="{% static 'jquery.cookie.js' %}"></script>
+	<script type="text/javascript">
+
+		<!--var $add_x = $('#add_cart').offset().top;-->
+		<!--var $add_y = $('#add_cart').offset().left;-->
+
+		<!--var $to_x = $('#show_count').offset().top;-->
+		<!--var $to_y = $('#show_count').offset().left;-->
+
+		<!--$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})-->
+		<!--$('#add_cart').click(function(){-->
+			<!--$(".add_jump").stop().animate({-->
+				<!--'left': $to_y+7,-->
+				<!--'top': $to_x+7},-->
+				<!--"fast", function() {-->
+					<!--$(".add_jump").fadeOut('fast',function(){-->
+						<!--$('#show_count').html(2);-->
+					<!--});-->
+
+			<!--});-->
+		<!--})-->
+		<!--跳转订单页面-->
+		$('.buy_btn').click(function(){
+			var one = $('#pid').val()
+			var two = $('.num_show').val()
+			$(this).attr('href','/place_order/?one=' + JSON.stringify(one) + '&two=' + JSON.stringify(two));
+
+		})
+
+
+
+
+
+		$('.add').click(function(){
+			// 获取原来的数量minus
+			var n = parseInt($('.num_show').val())
+			$('.num_show').val(n+1)
+
+
+			shu = $('.num_show').val()
+			price = $('#good_price').text()
+			price = parseFloat(price * shu * 100)
+			$('#price').text((price/100).toFixed(2) + '元')
+			})
+
+
+		$('.minus').click(function(){
+			// 获取原来的数量minus
+			var n = parseInt($('.num_show').val())
+			// 给数量加1
+			if (n>1){
+			$('.num_show').val(n-1)
+			$('.num_show').change()
+			}
+			// // 获取商品单价
+			shu = $('.num_show').val()
+			price = $('#good_price').text()
+			price = parseFloat(price * shu * 100)
+			$('#price').text((price/100).toFixed(2) + '元')
+			})
+
+
+		$('.add_cart').click(function(){
+		$.ajax({
+			url : 'http://127.0.0.1:8000/shopping/',
+			type:'post',
+			data:{
+				date:$('#pid').val(),
+				ones:$('.num_show').val()
+			},
+			headers:{
+				"X-CSRFTOKEN":$.cookie('csrftoken')
+			},
+			dateType:'json',
+			success: function(res){
+				<!--$('#show_count').html(res.name)-->
+				if ( res.names == 123 ){
+					location.reload()
+					alert('成功加入购物车')
+				}else{
+					window.location.href='http://127.0.0.1:8000/login/'
+				}
+			}
+		})
+		return false
+	})
+
+
+
+	</script>
+	
+{% endblock %}
